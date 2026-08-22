@@ -88,7 +88,6 @@ QUESTIONS = [
             "Er muss ausdrücklich mit der Führung des Gabelstaplers beauftragt sein;",
             "Immer, wenn die Ladung schwerer ist, als das Traglastdiagramm aussagt."
 
-Богдан Суворов, [22.08.2026 16:50]
 ],
         "correct": [3]
     },
@@ -191,7 +190,6 @@ with col2:
 
 st.divider()
 
-Богдан Суворов, [22.08.2026 16:50]
 score = 0
 for idx, q_idx in enumerate(st.session_state.order):
     q = QUESTIONS[q_idx]
