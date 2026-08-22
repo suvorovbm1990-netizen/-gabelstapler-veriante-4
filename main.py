@@ -2,72 +2,109 @@ import streamlit as st
 import random
 import os
 
-st.set_page_config(page_title="Gabelstapler Variante 4", page_icon="🏗️", layout="centered")
+st.set_page_config(page_title="Gabelstapler Quiz", page_icon="🏗️", layout="centered")
 
 QUESTIONS = [
-    {"id": 1, "frage": "Wie fährt man mit dem beladenen Gabelstapler ein Gefälle hinunter?", "image": None, "options": ['Die Last wird "bergseitig" geführt;', 'Auf keinen Fall im Leerlauf;', 'Die Last wird "talseitig" geführt;', 'Der Gabelstapler darf beladen grundsätzlich kein Gefälle befahren.'], "correct": [0, 1]},
-    {"id": 2, "frage": "Eine Kiste mit 1600 kg soll gestapelt werden. Unter welchen Bedingungen ist dies möglich?", "image": "images/2.jpg", "options": ['Lastschwerpunkt 600 mm und Höhe 4,5 m;', 'Lastschwerpunkt 600 mm und Höhe 5,5 m;', 'Lastschwerpunkt 700 mm und Höhe 4,0 m;', 'Lastschwerpunkt 500 mm und Höhe 5,0 m.'], "correct": [0, 2]},
-    {"id": 3, "frage": "Darf der Gabelstaplerfahrer Arbeitskollegen mitnehmen?", "image": None, "options": ['In keinem Fall;', 'Kurze Strecke;', 'Wenn Kollege in Eile ist;', 'Wenn besonderer Sitz-Stehplatz mit Haltegriffen vorhanden ist und Unternehmer das Mitfahren zugelassen hat.'], "correct": [3]},
-    {"id": 4, "frage": "Wann wäre die nächste Prüfung bei der dargestellten Prüfplakette erforderlich?", "image": "images/4.jpg", "options": ['Februar 2006;', 'August 2006;', 'Februar 2007;', 'August 2007.'], "correct": [0]},
-    {"id": 5, "frage": "Welche Aufgaben gehören zu den Pflegearbeiten, die der Fahrer durchführen darf?", "image": None, "options": ['Kühlwasserkontrolle;', 'Batteriepflege;', 'Lenkung instandsetzen;', 'Ölstandskontrolle;', 'Bremsbeläge erneuern.'], "correct": [0, 1, 3]},
-    {"id": 6, "frage": "Welche Fördermittel sind zu den Flurförderzeugen zu rechnen?", "image": None, "options": ['Gabelhubwagen;', 'Gabelstapler;', 'Schubmaststapler;', 'Bergwerkslore;', 'Kran-Laufkatze.'], "correct": [0, 1, 2]},
-    {"id": 10, "frage": "Was tun bei undichtem Hydraulikschlauch?", "image": None, "options": ['Ölstand prüfen und nachfüllen;', 'Mit Isolierband abdichten;', 'Nur halbe Tragkraft nutzen;', 'Sofort stilllegen und Schaden melden;', 'Nach Feierabend Bescheid sagen.'], "correct": [3]},
-    {"id": 11, "frage": "Wann darf ein geschulter Fahrer (18 Jahre) einen Gabelstapler benutzen?", "image": None, "options": ['Nur bei Tag;', 'Immer wenn Schlüssel steckt;', 'Nur bei Nacht;', 'Er muss ausdrücklich beauftragt sein;', 'Immer wenn Ladung schwerer als Diagramm.'], "correct": [3]},
-    {"id": 12, "frage": "Was ist beim Befahren von Ladebrücken zu beachten?", "image": "images/12.jpg", "options": ['Überhaupt nichts;', 'Darf nur rückwärts;', 'Tragfähigkeit der Ladebrücke;', 'Tragfähigkeit der Ladefläche;', 'Befahren von Anhängern nach UVV verboten.'], "correct": [2, 3]},
-    {"id": 13, "frage": "Welche Bezeichnung ist für das Gebotszeichen blau/weiss richtig? (Stiefel)", "image": "images/13.jpg", "options": ['Fussweg benutzen;', 'Heizraum für Schuhe;', 'Festes Schuhwerk verboten;', 'Schutzschuhe tragen.'], "correct": [3]},
-    {"id": 14, "frage": "Auf welche maximale Höhe dürfen Sie Palette 800x1200 mm, 1100 kg heben?", "image": "images/14.jpg", "options": ['4,0 m;', '4,5 m;', '5,0 m;', '5,5 m;', '3,5 m.'], "correct": [2]},
-    {"id": 15, "frage": "Welche Verkehrswege dürfen mit Flurförderzeugen befahren werden?", "image": None, "options": ['Nur die von der Unternehmensleitung festgelegten Wege;', 'Nur Hauptverkehrswege;', 'Keine besondere Vorschrift;', 'Nur ganz ebene Wege;', 'Nur Fusswege.'], "correct": [0]},
-    {"id": 16, "frage": "Wann darf ein Gabelstapler bei hochgefahrener Arbeitsbühne verlassen werden?", "image": None, "options": ['Kurzzeitig;', 'Nur bei Feststellbremse und Motor aus;', 'Nur bei Dienstschluss;', 'Nie;', 'Nur bei ebenem Boden.'], "correct": [3]},
-    {"id": 17, "frage": "Welche Flüssigkeit befindet sich in der Batterie?", "image": None, "options": ['Destilliertes Wasser;', 'Verdünnte Schwefelsäure;', 'Salzsäure;', 'Leitungswasser.'], "correct": [1]},
-    {"id": 18, "frage": "Auf welcher Darstellung ist der Lastschwerpunktabstand am größten?", "image": "images/18.jpg", "options": ['a) Darstellung a', 'b) Darstellung b', 'c) Darstellung c'], "correct": [0]},
-    {"id": 19, "frage": "Stellen mit Öl, Fett, Benzin getränkte Putzlappen große Brandgefahr dar?", "image": None, "options": ['Nein, nicht brennbar;', 'Nein, mit Fett gemischt brennt nicht;', 'Ja, Selbstentzündung möglich;', 'Ja, Dämpfe bilden explosionsfähiges Gemisch.'], "correct": [2, 3]},
-    {"id": 20, "frage": "Welche Arbeiten gehören zur Abfahrtskontrolle Diesel-Stapler?", "image": None, "options": ['Waschen;', 'Gabelzinken auf Beschädigung prüfen;', 'Luftfilter reinigen;', 'Motorölstand prüfen.'], "correct": [1, 3]},
+    {"f": "Wie fahrt man mit dem beladenen Gabelstapler ein Gefalle hinunter?", "img": None, "opts": ['Die Last wird "bergseitig" gefuhrt', 'Auf keinen Fall im Leerlauf', 'Die Last wird "talseitig" gefuhrt', 'Kein Gefalle befahren'], "c": [0,1]},
+    {"f": "Kiste 1600 kg - wann stapeln moglich? (Diagramm beachten)", "img": "Диаграмма Tragfähigkeit 2000kg.jpg", "opts": ['600 mm und 4,5 m', '600 mm und 5,5 m', '700 mm und 4,0 m', '500 mm und 5,0 m'], "c": [0,2]},
+    {"f": "Darf Fahrer Kollegen mitnehmen?", "img": None, "opts": ['In keinem Fall', 'Kurze Strecke', 'Wenn in Eile', 'Wenn Sitz mit Griffen und erlaubt'], "c": [3]},
+    {"f": "Wann nachste Prufung bei dieser Prufplakette?", "img": "Pfüfplakette.jpg", "opts": ['Februar 2006', 'August 2006', 'Februar 2007', 'August 2007'], "c": [0]},
+    {"f": "Welche Aufgaben darf Fahrer bei Pflege machen?", "img": None, "opts": ['Kuhlwasser', 'Batteriepflege', 'Lenkung instandsetzen', 'Olstand', 'Bremsbelage'], "c": [0,1,3]},
+    {"f": "Welche sind Flurforderzeuge?", "img": None, "opts": ['Gabelhubwagen', 'Gabelstapler', 'Schubmaststapler', 'Bergwerkslore', 'Kran-Laufkatze'], "c": [0,1,2]},
+    {"f": "Was tun bei undichtem Hydraulikschlauch?", "img": None, "opts": ['Olstand prufen', 'Isolierband', 'Halbe Tragkraft', 'Sofort stilllegen und melden', 'Nach Feierabend'], "c": [3]},
+    {"f": "Wann darf 18-jahriger geschulter Fahrer Stapler nutzen?", "img": None, "opts": ['Nur bei Tag', 'Schlussel steckt', 'Nur bei Nacht', 'Muss beauftragt sein', 'Wenn schwerer als Diagramm'], "c": [3]},
+    {"f": "Was beim Befahren von Ladebrucken beachten?", "img": "Ladebrücke.jpg", "opts": ['Nichts', 'Nur ruckwarts', 'Tragfahigkeit Ladebrucke', 'Tragfahigkeit Ladeflache', 'Nach UVV verboten'], "c": [2,3]},
+    {"f": "Gebotszeichen blau/weiss mit Schuh - was bedeutet?", "img": "Gebotszeichen Schuhe.jpg", "opts": ['Fussweg', 'Heizraum', 'Festes Schuhwerk verboten', 'Schutzschuhe tragen'], "c": [3]},
+    {"f": "Palette 800x1200 1100kg - max Hohe? (1500kg Diagramm)", "img": "Tragfähigkeit 1500 kg.jpg", "opts": ['4,0 m', '4,5 m', '5,0 m', '5,5 m', '3,5 m'], "c": [2]},
+    {"f": "Welche Verkehrswege durfen befahren werden?", "img": None, "opts": ['Nur festgelegte Wege', 'Nur Hauptwege', 'Keine Vorschrift', 'Nur ebene', 'Nur Fusswege'], "c": [0]},
+    {"f": "Wann darf Stapler bei hoher Buhne verlassen werden?", "img": None, "opts": ['Kurzzeitig', 'Bremse+Motor aus', 'Dienstschluss', 'Nie', 'Ebener Boden'], "c": [3]},
+    {"f": "Flussigkeit in Batterie?", "img": None, "opts": ['Destilliertes Wasser', 'Verdunnte Schwefelsaure', 'Salzsaure', 'Leitungswasser'], "c": [1]},
+    {"f": "Wo ist Lastschwerpunktabstand am groessten?", "img": "3 картинки с паллетой.jpg", "opts": ['a) weit vorn', 'b) nah', 'c) direkt am Rucken'], "c": [0]},
+    {"f": "Brandgefahr durch olgetrankte Lappen?", "img": None, "opts": ['Nein', 'Nein mit Fett', 'Ja Selbstentzundung', 'Ja Dampfe explosiv'], "c": [2,3]},
+    {"f": "Abfahrtskontrolle Diesel-Stapler?", "img": None, "opts": ['Waschen', 'Gabelzinken prufen', 'Luftfilter', 'Olstand'], "c": [1,3]},
 ]
 
-if "order" not in st.session_state:
+# --- SESSION ---
+if "idx" not in st.session_state:
+    st.session_state.idx = 0
+    st.session_state.score = 0
     st.session_state.order = random.sample(range(len(QUESTIONS)), len(QUESTIONS))
-    st.session_state.checked = False
+    st.session_state.answered = False
+    st.session_state.correct = False
 
-st.title("🏗️ Gabelstapler - Variante 4")
+def next_q():
+    st.session_state.idx += 1
+    st.session_state.answered = False
 
-c1, c2 = st.columns(2)
-with c1:
-    if st.button("🔀 Перемешать"):
-        st.session_state.order = random.sample(range(len(QUESTIONS)), len(QUESTIONS))
-        st.session_state.checked = False
-        st.rerun()
-with c2:
-    if st.button("🔄 Сбросить"):
-        st.session_state.checked = False
-        st.rerun()
+def restart():
+    st.session_state.idx = 0
+    st.session_state.score = 0
+    st.session_state.order = random.sample(range(len(QUESTIONS)), len(QUESTIONS))
+    st.session_state.answered = False
 
-st.divider()
-score = 0
-for idx, q_idx in enumerate(st.session_state.order):
-    q = QUESTIONS[q_idx]
-    st.subheader(f"{idx+1}. {q['frage']}")
-    if q["image"] and os.path.exists(q["image"]):
-        st.image(q["image"], width=450)
+# --- UI ---
+total = len(QUESTIONS)
+cur = st.session_state.idx
+if cur < total:
+    st.progress((cur)/total, text=f"Frage {cur+1} von {total} | Punkte: {st.session_state.score}")
+    q = QUESTIONS[st.session_state.order[cur]]
+    st.header(f"{q['f']}")
+    
+    # Bild - sucht in root und in images/
+    if q["img"]:
+        found = False
+        for p in [q["img"], f"images/{q['img']}", f"./{q['img']}"]:
+            if os.path.exists(p):
+                st.image(p, use_container_width=True)
+                found = True
+                break
+        if not found:
+            st.warning(f"Bild {q['img']} nicht gefunden")
 
+    if len(q["c"]) > 1:
+        st.caption("Mehrere Antworten moglich!")
+
+    # Antworten
     selected = []
-    for i, opt in enumerate(q["options"]):
-        if st.checkbox(opt, key=f"q{q['id']}_{i}_{idx}"):
+    for i, opt in enumerate(q["opts"]):
+        if st.checkbox(opt, key=f"{cur}_{i}", disabled=st.session_state.answered):
             selected.append(i)
 
-    if st.session_state.checked:
-        if set(selected) == set(q["correct"]):
-            st.success("✅ Правильно")
-            score += 1
+    if not st.session_state.answered:
+        if st.button("Antworten", type="primary", use_container_width=True):
+            if not selected:
+                st.warning("Bitte Antwort wahlen!")
+            else:
+                st.session_state.answered = True
+                if set(selected) == set(q["c"]):
+                    st.session_state.correct = True
+                    st.session_state.score += 1
+                else:
+                    st.session_state.correct = False
+                st.rerun()
+    else:
+        if st.session_state.correct:
+            st.success("✅ RICHTIG!")
         else:
-            corr = ", ".join([q["options"][c] for c in q["correct"]])
-            st.error(f"❌ Правильно: {corr}")
+            st.error("❌ FALSCH!")
+            richtig = ", ".join([q["opts"][i] for i in q["c"]])
+            st.info(f"Richtig ist: {richtig}")
+        
+        if st.button("Weiter ➡️", type="primary", use_container_width=True):
+            next_q()
+            st.rerun()
+
     st.divider()
+    if st.button("Neu mischen"):
+        restart()
+        st.rerun()
 
-if st.button("✅ Проверить", type="primary"):
-    st.session_state.checked = True
-    st.rerun()
-
-if st.session_state.checked:
-    st.metric("Результат", f"{score} / {len(QUESTIONS)}")
-    if score == len(QUESTIONS):
+else:
+    st.title("🏁 Fertig!")
+    st.metric("Ergebnis", f"{st.session_state.score}/{total}")
+    if st.session_state.score == total:
         st.balloons()
+        st.success("Perfekt!")
+    if st.button("Nochmal starten", type="primary"):
+        restart()
+        st.rerun()
