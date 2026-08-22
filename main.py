@@ -1,4 +1,3 @@
-Богдан Суворов, [22.08.2026 16:50]
 import streamlit as st
 import random
 import os
